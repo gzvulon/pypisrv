@@ -1,0 +1,40 @@
+version: '2'
+
+vars:
+  GREETING: Hello, World!
+  # PYPATH: {sh: echo "$(realpath .)/libs"}
+  GIT_COMMIT: {sh: git log -n 1 --format=%h}
+
+tasks:
+  default:
+    cmds:
+      - echo "{{.GREETING}}"
+    silent: true
+
+  snap-info:
+    desc: snapshot info
+    cmds:
+      - echo "{{.GIT_COMMIT}}"
+
+  up:
+    desc: starts containers
+    cmds:
+      - docker-compose up
+
+  status:
+    desc: show serveres status
+    cmds:
+      - docker-compose ps
+
+  down:
+    desc: remove containers
+    cmds:
+      - docker-compose down
+
+  data-clean:
+    desc: removes contaners mapped data
+    cmds:
+      - rm -rf data
+      - rm -rf packages
+      - rm -rf postgresql
+
