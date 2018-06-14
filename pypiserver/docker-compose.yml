@@ -1,0 +1,9 @@
+pypiserver:
+  build: .
+  volumes:
+    - ./data:/app/data
+    - ./srv:/srv
+  command:
+    - ls
+  ports:
+    - "8081:8081"

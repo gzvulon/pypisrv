@@ -18,8 +18,31 @@ RUN task -d /app --list
 
 # install dependncies
 RUN task -d /app deps-install
-ENTRYPOINT [ "task", "-d", "/app", "run-mypypi" ]
+RUN ls /app
+
+# RUN mkdir -p /srv
+# ADD strartup.sh /srv/strartup.sh
+# RUN chmod +x /srv/strartup.sh
+# RUN ls /srv
+
+WORKDIR /
+# RUN rm -rf /pypiserver
+
+# Start Script
+ADD startup.sh /bin/startup.sh
+RUN chmod +x /bin/startup.sh
+
+# Data Directory
+RUN mkdir -p /app/data/packages
+WORKDIR /app/data
+
+# ENTRYPOINT [ "task", "-d", "/app", "run-mypypi" ]
+# CMD [ "bash", "-c","/srv/strartup.sh" ]
+
+# ENTRYPOINT ["pypi-server"]
+# CMD ["--overwrite", "-P", ".", "-a", ".", "-p", "8081", "packages"]
 
 
 
 
+CMD ["/bin/startup.sh"]

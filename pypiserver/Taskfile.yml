@@ -13,40 +13,10 @@ tasks:
       - echo "{{.GREETING}}"
     silent: true
 
-  up:
-    desc: starts service
-    cmds:
-      - docker-compose up $(echo "{{._opts}}")
-
-  # status:
-  #   desc: show serveres status
-  #   cmds:
-  #     - docker-compose ps
-
-  # down:
-  #   desc: remove containers
-  #   cmds:
-  #     - docker-compose down
-
-  # up:
-  #   desc: starts containers
-  #   cmds:
-  #     - docker-compose up $(echo "{{._opts}}")
-
-  # status:
-  #   desc: show serveres status
-  #   cmds:
-  #     - docker-compose ps
-
-  # down:
-  #   desc: remove containers
-  #   cmds:
-  #     - docker-compose down
-
   data-clean:
     desc: removes contaners mapped data
     cmds:
-      - rm -rf packages
+      - rm -rf data
 
   venv-ensure:
     desc: ensures that all packages are preserved
@@ -56,7 +26,6 @@ tasks:
   add-mypypi:
     cmds:
       - pipenv install pypiserver --skip-lock
-      - mkdir packages
 
   deps-install:
     cmds:
@@ -64,7 +33,7 @@ tasks:
 
   run-mypypi:
     cmds:
-      - pypi-server --overwrite -P .  -a . -p 8081 data/packages
+      - pipenv run pypi-server --overwrite -P .  -a . -p 8081 packages
 
   mypypi-install:
     cmds:
@@ -72,7 +41,23 @@ tasks:
         pip install --extra-index-url http://localhost:8081 {{._opts}}
 
 
+  dc-up:
+    desc: starts service
+    cmds:
+      - |
+        docker-compose up {{._opts}}
 
+  dc-build:
+    desc: build docker container
+    cmds:
+      - docker-compose build
 
+  dc-status:
+    desc: show serveres status
+    cmds:
+      - docker-compose ps
 
-
+  dc-down:
+    desc: remove containers
+    cmds:
+      - docker-compose down
