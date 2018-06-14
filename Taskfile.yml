@@ -5,28 +5,13 @@ version: '2'
 ##############################################################################
 
 vars:
-  GREETING: Hello, World!
-  # PYPATH: {sh: echo "$(realpath .)/libs"}
-  GIT_COMMIT: {sh: git log -n 1 --format=%h}
-  # VARM: {sh: "if [ ! -z $MVA ]; then; echo $MVAR; else; echo MARV; fi;" }
-  NARM: ''
-  VARM:
+  GREETING: Pypyserver
   _opts:
 tasks:
   default:
     cmds:
       - echo "{{.GREETING}}"
     silent: true
-
-  snap-info:
-    desc: snapshot info
-    cmds:
-      - echo "{{.GIT_COMMIT}}"
-      - echo -"{{.VARM}}"-
-      - echo ="{{.NARM}}"=
-      - echo $(echo "{{._opts}}")
-      - echo --
-    silent: yes
 
   up:
     desc: starts service
@@ -79,7 +64,7 @@ tasks:
 
   run-mypypi:
     cmds:
-      - pypi-server --overwrite -P .  -a . -p 8081 packages
+      - pypi-server --overwrite -P .  -a . -p 8081 data/packages
 
   mypypi-install:
     cmds:
