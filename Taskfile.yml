@@ -1,10 +1,17 @@
 version: '2'
 
+##############################################################################
+# Using: https://pypi.org/project/pypiserver/
+##############################################################################
+
 vars:
   GREETING: Hello, World!
   # PYPATH: {sh: echo "$(realpath .)/libs"}
   GIT_COMMIT: {sh: git log -n 1 --format=%h}
-
+  # VARM: {sh: "if [ ! -z $MVA ]; then; echo $MVAR; else; echo MARV; fi;" }
+  NARM: ''
+  VARM:
+  _opts:
 tasks:
   default:
     cmds:
@@ -15,26 +22,72 @@ tasks:
     desc: snapshot info
     cmds:
       - echo "{{.GIT_COMMIT}}"
+      - echo -"{{.VARM}}"-
+      - echo ="{{.NARM}}"=
+      - echo $(echo "{{._opts}}")
+      - echo --
+    silent: yes
 
   up:
-    desc: starts containers
+    desc: starts service
     cmds:
-      - docker-compose up
+      - docker-compose up $(echo "{{._opts}}")
 
-  status:
-    desc: show serveres status
-    cmds:
-      - docker-compose ps
+  # status:
+  #   desc: show serveres status
+  #   cmds:
+  #     - docker-compose ps
 
-  down:
-    desc: remove containers
-    cmds:
-      - docker-compose down
+  # down:
+  #   desc: remove containers
+  #   cmds:
+  #     - docker-compose down
+
+  # up:
+  #   desc: starts containers
+  #   cmds:
+  #     - docker-compose up $(echo "{{._opts}}")
+
+  # status:
+  #   desc: show serveres status
+  #   cmds:
+  #     - docker-compose ps
+
+  # down:
+  #   desc: remove containers
+  #   cmds:
+  #     - docker-compose down
 
   data-clean:
     desc: removes contaners mapped data
     cmds:
-      - rm -rf data
       - rm -rf packages
-      - rm -rf postgresql
+
+  venv-ensure:
+    desc: ensures that all packages are preserved
+    cmds:
+      - pipenv install --skip-lock
+
+  add-mypypi:
+    cmds:
+      - pipenv install pypiserver --skip-lock
+      - mkdir packages
+
+  deps-install:
+    cmds:
+      - pip install pypiserver
+
+  run-mypypi:
+    cmds:
+      - pypi-server --overwrite -P .  -a . -p 8081 packages
+
+  mypypi-install:
+    cmds:
+      - |
+        pip install --extra-index-url http://localhost:8081 {{._opts}}
+
+
+
+
+
 
